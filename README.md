@@ -108,6 +108,7 @@ server {
  - PSNRGridWidth: PSNR 시각화 그리드의 너비를 설정한다. [GET, JSON] (Integer, Unit:px, Default=5)
  - PSNRGridHeight: PSNR 시각화 그리드의 높이를 설정한다. [GET, JSON] (Integer, Unit:px, Default=5)
  - PSNRGridSize: PSNR 그리드의 크기를 설정한다. 이 값이 설정되면, 너비와 높이가 이 크기로 설정된다. [GET, JSON] (Integer, Unit:px, Default=null)
+ - pageZoom: 현재 페이지의 줌 수준을 강제로 지정한다. [GET, JSON] (Float, Default=1)
  - pageZoomDelta: 페이지 줌 조정 시의 증감 단위를 설정한다. 이 값은 마우스 휠 이벤트에 따라 페이지 줌 레벨을 조정할 때 사용된다. [GET, JSON] (Float, Default=0.01 (1%))
  - showingPSNRVisualizer: PSNR 시각화 도구의 활성화 여부를 설정한다. [GET, JSON] (Boolean, Default=false)
  - diffIndex: 차이 이미지를 보여줄 때 기준이 될 이미지 색인을 설정한다. [GET, JSON] (Integer, Default=-1)
@@ -139,6 +140,7 @@ server {
  - targets[?].labelColor: 타겟 레이블의 텍스트 색상을 설정한다. 사용자 인터페이스에서 레이블을 더욱 눈에 띄게 할 수 있다. [JSON] (CSS Color String, Default=hashColor(targets[?].path))
  - targets[?].labelBackgroundColor: 타겟 레이블의 배경 색상을 설정한다. 이 색상은 레이블의 가독성을 향상시키는 데 도움을 준다. [JSON] (CSS Color String, Default: whiteOrBlack(targets[?].labelColor))
  - targets[?].hide: 특정 타겟을 사용자 인터페이스에서 숨길지 결정한다. 이 값이 true로 설정되면 해당 타겟은 뷰어에 표시되지 않는다. [JSON] (Boolean, Default=false)
+ - targets[?].ignore: 특정 타겟을 전체 처리 로직에서 완전히 무시한다. [JSON] (Boolean, Default=false)
  - targets[?].groundtruth: 타겟이 기준 데이터(groundtruth)인지 여부를 설정한다. 설정한 타겟의 이미지 목록이 전체의 기준으로 설정된다. `type=results`를 사용시 필수적으로 하나의 타겟에 설정해야 하며, PSNR, SSIM 계산 등에 해당 타겟이 기준으로 사용된다. (이 값이 설정되지 않으면 뷰어는 첫번째 타겟의 이미지 목록을 기준으로 사용한다) [JSON] (Boolean, Default=false)
  - targets[?].files: 타겟별로 내부 이미지 파일 목록이 다른 경우, 존재하는 내부 이미지 파일 목록을 수동으로 구성할 때 사용한다. (FileName String Array, Default=[files of targets[?].path])
 

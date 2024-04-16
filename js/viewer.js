@@ -124,6 +124,7 @@ export default class Viewer {
             this.PSNRGridWidth = this.PSNRGridHeight = this.PSNRGridSize;
         }
 
+        this.pageZoom = parseFloat(this.params.pageZoom) || this.pageZoom || localStorage['zoomLevel'] || 1;
         this.pageZoomDelta = parseFloat(this.params.pageZoomDelta) || this.pageZoomDelta || 0.01;
         this.showingPSNRVisualizer = this.params.showingPSNRVisualizer === 'true' || this.showingPSNRVisualizer || false;
         this.showingFavorites = false;
@@ -412,7 +413,7 @@ export default class Viewer {
     }
 
     addZoomHandler() {
-        document.body.style.zoom = localStorage['zoomLevel'] || 1;
+        document.body.style.zoom = localStorage['zoomLevel'] = this.pageZoom;
         document.addEventListener('wheel', e => {
             if (e.shiftKey) {
                 e.preventDefault();
