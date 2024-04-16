@@ -14,10 +14,10 @@ python -m http.server [LISTEN_PORT]
 ### nginx (recommend)
 
 ```bash
-docker run --name super-resoution-viewer -p [LISTEN_PORT]:80 -v [HOSTING_DIRECTORY]:/usr/share/nginx/html -v [THIS_PROJECT_ROOT]/deploy/nginx.conf:/etc/nginx/nginx.conf -d nginx:stable-alpine3.17-slim
+docker run --name super-resolution-viewer -p [LISTEN_PORT]:80 -v [HOSTING_DIRECTORY]:/usr/share/nginx/html -v [THIS_PROJECT_ROOT]/deploy/default.conf:/etc/nginx/conf.d/default.conf -d nginx:stable-alpine3.17-slim
 # example
-cd super-resoution-viewer
-docker run --name super-resoution-viewer -p 8080:80 -v $(pwd):/usr/share/nginx/html -v $(pwd)/deploy/nginx.conf:/etc/nginx/nginx.conf -d nginx:stable-alpine3.17-slim
+cd super-resolution-viewer
+docker run --name super-resolution-viewer -p 8080:80 -v $(pwd):/usr/share/nginx/html -v $(pwd)/deploy/default.conf:/etc/nginx/conf.d/default.conf -d nginx:stable-alpine3.17-slim
 ```
 
 ### github.io

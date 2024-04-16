@@ -31,7 +31,8 @@ export default class Viewer {
     async init() {
         this.params = Object.fromEntries(new URL(document.location).searchParams);
         try {
-            this.configRaw = await fetch(`configs/${this.params.config}`, {cache: "no-store"}).then(response => response.text());
+            this.configPath = this.params.configPath ? this.params.configPath : `configs/${this.params.config}`;
+            this.configRaw = await fetch(this.configPath, {cache: "no-store"}).then(response => response.text());
             const config = JSON.parse(this.configRaw);
             for (const key in config) {
                 this[key] = this[key] ? this[key] : config[key];
