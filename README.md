@@ -65,7 +65,8 @@ docker run --name super-resolution-viewer -p 8080:80 -v $(pwd):/usr/share/nginx/
 뷰어의 거의 모든 매개변수는 설정 파일 `config/**/*.json`과 `GET 매개변수`를 통해 동시에 설정할 수 있다.
 `GET 매개변수`의 설정값이, `config/**/*.json`의 설정값보다 높은 우선순위를 가진다.
 
-- config: 설정 파일의 이름을 지정한다. [GET] (String, Required)
+- config: `configs/**` 내부에 위치한 설정 파일의 이름을 지정한다. [GET] (String, Required)
+- configPath: 설정 파일의 경로를 수동으로 지정한다. `configs/**` 이 옵션을 통해 내부에 위치하지 않은 설정 파일을 사용할 수 있다. [GET] (String)
 - type: 뷰어의 경로 [맵핑 유형](#mappers)을 설정한다. 미설정 시 기본 매핑 로직이 적용된다. [GET, JSON] (String, Default="default")
 
  ```
