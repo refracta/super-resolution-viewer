@@ -53,7 +53,7 @@ export default class Viewer {
             const {branch} = await fetch(`js/github.io.json`).then(r => r.json());
             this.tree = (await fetch(`https://api.github.com/repos/${user}/${repo}/git/trees/${branch}?recursive=true`).then(r => r.json())).tree;
         }
-        const targetResponses = await Promise.all(this.targets.map(this.getDirectoryInfo));
+        const targetResponses = await Promise.all(this.targets.map(t => this.getDirectoryInfo(t)));
         this.targets = this.targets.map((t, i) => ({
             ...t, label: t.label || t.path, files: t.files || targetResponses[i]
         }));
