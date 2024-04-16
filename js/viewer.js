@@ -7,7 +7,7 @@ export default class Viewer {
 
     getDirectoryInfo(target) {
         if (this.isGitHubHosting) {
-            return this.tree.filter(e => e.path.includes(target.path) && e.path.split('/').length === 1 && e.type === 'blob').map(e => e.path.split('/').pop());
+            return this.tree.filter(e => e.path.includes(target.path) && e.path.replace(`${target.path}/`).split('/').length === 1 && e.type === 'blob').map(e => e.path.split('/').pop());
         }
         return fetch(`/${target.path}`, {cache: "no-store"})
             .then(response => response.ok ? response.text() : '[]')
