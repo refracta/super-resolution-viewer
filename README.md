@@ -52,18 +52,18 @@ docker run --name super-resolution-viewer -p 8080:80 -v $(pwd):/usr/share/nginx/
     {
       "path": "demos/{data}/d"
     }
-  ],
-  "configHelp": "Available {data} = alpha, beta"
+  ]
 }
 ```
 
 - `targets`: 각 경로 정보 항목의 리스트 [1개 항목 이상 필수]
 - `targets[?]`: 경로 정보 항목
-- `targets[?].path`: 이미지가 저장된 폴더 경로 [필수]
+- `targets[?].path`: 이미지가 저장된 폴더 경로, {GET_PARAMETER_NAME}의 형태로 GET 매개변수 값을 경로에 사용할 수 있다. [필수]
 - `targets[?].groundTruth`: 타겟이 기준 데이터(groundTruth)인지의 여부를 설정
   해당 설정 파일을 구성 후, 뷰어 페이지에 GET 매개변수로 `config=demos.json`을 설정하여 뷰어를 사용할 수 있다. [필수 GET 매개변수]
 
-- [?config=demos.json](https://refracta.github.io/super-resolution-viewer?config=demos.json)
+- [?config=demos.json&data=alpha](https://refracta.github.io/super-resolution-viewer?config=demos.json&data=alpha)
+- [?config=demos.json&data=beta](https://refracta.github.io/super-resolution-viewer?config=demos.json&data=beta)
 
 ### Advanced configuration
 
