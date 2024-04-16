@@ -1,12 +1,36 @@
 import ImageContainer from "./image-container.js"
 import mappers from "./mappers.js"
-import {beep, downloadURI, getContrastYIQ, naturalSort, stringToColor, waitFor} from "./utils.js";
+import {naturalSort, stringToColor, getContrastYIQ, beep, downloadURI, waitFor} from "./utils.js";
 import {calculatePSNR, calculateSSIM, getDiffImage, getPSNRImage, waitImage, waitImages} from "./image-utils.js";
 
 export default class Viewer {
+
+    getDirectoryInfo(target) {
+        if (this.isGitHubHosting) {
+            return this.tree.filter(e => e.path.includes(target.path) && e.path.split('/').length === 1 && e.type === 'blob').map(e => e.path.split('/').pop());
+        }
+        return fetch(`/${target.path}`, {cache: "no-store"})
+            .then(response => response.ok ? response.text() : '[]')
+            .then(response => {
+                try {
+                    response = JSON.parse(response);
+                    // nginx autoindex json
+                } catch (e) {
+                    const anchorArray = Array.from(new DOMParser().parseFromString(response, 'text/html').querySelectorAll('a'));
+                    response = anchorArray.map(a => {
+                        const name = a.getAttribute('href');
+                        const type = name.endsWith('/') ? 'directory' : 'file';
+                        return {name: type === 'directory' ? name.substring(0, name.length - 1) : name, type};
+                    });
+                    // python -m http.server
+                }
+                return response.filter(f => f.type === 'file').map(f => f.name);
+            });
+    }
+
     async init() {
         this.params = Object.fromEntries(new URL(document.location).searchParams);
-        this.configRaw = await fetch(`configs/${this.params.config}`, {cache: "no-store"}).then(r => r.text());
+        this.configRaw = await fetch(`configs/${this.params.config}`, {cache: "no-store"}).then(response => response.text());
         const config = JSON.parse(this.configRaw);
         for (const key in config) {
             this[key] = this[key] ? this[key] : config[key];
@@ -22,9 +46,13 @@ export default class Viewer {
         }
         this.targets = this.targets.map((t, i, a) => this.mappers['targetBefore'](t, i, a, this));
 
-        const targetResponses = await Promise.all(this.targets.map(t => fetch(`/${t.path}`, {cache: "no-store"})
-            .then(r => r.ok ? r.json() : []).then(r => r.filter(f => f.type === 'file').map(f => f.name))));
-
+        this.isGitHubHosting = location.host.endsWith('github.io');
+        if (this.isGitHubHosting) {
+            const user = location.host.split('.').shift();
+            const repo = location.pathname.split('/').filter(p => p).shift();
+            this.tree = (await fetch(`https://api.github.com/repos/${user}/${repo}/git/trees/gh-pages?recursive=true`).then(r => r.json())).tree();
+        }
+        const targetResponses = await Promise.all(this.targets.map(this.getDirectoryInfo));
         this.targets = this.targets.map((t, i) => ({
             ...t, label: t.label || t.path, files: t.files || targetResponses[i]
         }));
@@ -100,8 +128,7 @@ export default class Viewer {
         this.diffIndex = parseInt(this.params.diffIndex) || this.diffIndex || -1;
 
         this.zoomMode = this.params.zoomMode === 'true' || this.zoomMode || false;
-
-        this.zoomAreaWidthRatio = parseFloat(this.params.zoomAreaWidthRatio) || this.zoomAreaWidthRatio || 0.8;
+        ;this.zoomAreaWidthRatio = parseFloat(this.params.zoomAreaWidthRatio) || this.zoomAreaWidthRatio || 0.8;
         this.zoomAreaHeightRatio = parseFloat(this.params.zoomAreaHeightRatio) || this.zoomAreaHeightRatio || 0.8;
         this.zoomAreaWidth = parseInt(this.params.zoomAreaWidth) || this.zoomAreaWidth || 100;
         this.zoomAreaHeight = parseInt(this.params.zoomAreaHeight) || this.zoomAreaHeight || 100;
@@ -437,7 +464,7 @@ export default class Viewer {
                 if (this.setIndex(this.index - 1)) {
                     this.update();
                 }
-            } else if (e.key === 'r') {
+            } else if (e.key === 'response') {
                 this.update(0);
             } else if (e.key === 's') {
                 this.addToFavorites();
@@ -475,7 +502,7 @@ export default class Viewer {
                         F2: config help
                         ←, →: previous, next image
                         (i)ndex: move to index
-                        (r)eset
+                        (response)eset
                         shift + wheel: page zoom
 
                         (a)dd to favorites
