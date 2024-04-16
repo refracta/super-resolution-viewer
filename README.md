@@ -1,4 +1,5 @@
 # super-resolution-viewer
+
 ![](https://github.com/refracta/super-resolution-viewer/assets/58779799/d8f76bd3-421d-4c49-a473-cf8454696edc)
 ![](https://github.com/refracta/super-resolution-viewer/assets/58779799/b0f9c381-2ad9-4953-a7a8-8beee69c9295)
 
@@ -34,7 +35,7 @@ docker run --name super-resolution-viewer -p 8080:80 -v $(pwd):/usr/share/nginx/
 
 ### [configs/demos.json](configs/demos.json)
 
- ```json
+```json
 {
   "title": "demos",
   "targets": [
@@ -54,7 +55,7 @@ docker run --name super-resolution-viewer -p 8080:80 -v $(pwd):/usr/share/nginx/
   ],
   "configHelp": "Available {data} = alpha, beta"
 }
- ```
+```
 
 - `targets`: 각 경로 정보 항목의 리스트 [1개 항목 이상 필수]
 - `targets[?]`: 경로 정보 항목
@@ -73,28 +74,28 @@ docker run --name super-resolution-viewer -p 8080:80 -v $(pwd):/usr/share/nginx/
 - configPath: 설정 파일의 경로를 수동으로 지정한다. `configs/**` 이 옵션을 통해 내부에 위치하지 않은 설정 파일을 사용할 수 있다. [GET] (String)
 - type: 뷰어의 경로 [맵핑 유형](#mappers)을 설정한다. 미설정 시 기본 매핑 로직이 적용된다. [GET, JSON] (String, Default="default")
 
- ```
- [GET]
- ?type=mapping-type-name
+```
+[GET]
+?type=mapping-type-name
 
- [JSON]
- {
-    "type": "mapping-type-name"
- }
- ```
+[JSON]
+{
+  "type": "mapping-type-name"
+}
+```
 
 - title: 뷰어의 제목을 설정한다. 이 제목은 브라우저 탭이나 페이지 제목에 사용된다. [GET, JSON] (String, Default="Super-Resolution Viewer")
 - indexes: 특정 이미지 파일들의 색인을 설정한다. 본 설정이 적용되면 뷰어는 해당 인덱스 목록만 순회하게 된다. [GET, JSON] (Integer Array,
   Default=[All of Image Indexes])
 
- ```
- [GET]
- ?indexes=1.3.5 (seperator='.', ',', '*')
+```
+[GET]
+?indexes=1.3.5 (seperator='.', ',', '*')
 
- [JSON]
- {
-    "indexes": [1, 3, 5, 7, 8]
- }
+[JSON]
+{
+  "indexes": [1, 3, 5, 7, 8]
+}
  ```
 
 - index: 초기에 보여질 이미지의 색인을 설정한다. 이 값은 사용자가 이미지를 넘길 때 업데이트 된다. [GET, JSON] (Integer, Default=0)
@@ -102,7 +103,6 @@ docker run --name super-resolution-viewer -p 8080:80 -v $(pwd):/usr/share/nginx/
 - hides: 특정 타겟을 숨기기 위한 색인 배열을 설정한다. 특정 이미지들을 뷰에서 제외시킬 때 사용된다. targets[?].hide와 동시에 적용된다. [GET, JSON] (Integer Array,
   Default=[])
 - canvasLeftColor: 그리기 도구에서 사용할 왼쪽 버튼의 색상을 설정한다. [GET, JSON] (CSS Color String)
-
 
 ```
 [GET]
@@ -112,7 +112,7 @@ docker run --name super-resolution-viewer -p 8080:80 -v $(pwd):/usr/share/nginx/
 
 [JSON]
 {
-"canvasLeftColor": "ff00ff"
+  "canvasLeftColor": "ff00ff"
 }
 
  ```
@@ -147,7 +147,7 @@ docker run --name super-resolution-viewer -p 8080:80 -v $(pwd):/usr/share/nginx/
 
 [JSON]
 {
-"crop": "crop=x100y100w100h100d1p1"
+  "crop": "crop=x100y100w100h100d1p1"
 }
 ```
 
