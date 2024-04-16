@@ -59,6 +59,7 @@ docker run --name super-resolution-viewer -p 8080:80 -v $(pwd):/usr/share/nginx/
 - `targets`: 각 경로 정보 항목의 리스트 [1개 항목 이상 필수]
 - `targets[?]`: 경로 정보 항목
 - `targets[?].path`: 이미지가 저장된 폴더 경로 [필수]
+- `targets[?].groundTruth`: 타겟이 기준 데이터(groundTruth)인지의 여부를 설정
   해당 설정 파일을 구성 후, 뷰어 페이지에 GET 매개변수로 `config=demos.json`을 설정하여 뷰어를 사용할 수 있다. [필수 GET 매개변수]
 
 - [?config=demos.json](https://refracta.github.io/super-resolution-viewer?config=demos.json)
@@ -162,7 +163,7 @@ docker run --name super-resolution-viewer -p 8080:80 -v $(pwd):/usr/share/nginx/
   Default: whiteOrBlack(targets[?].labelColor))
 - targets[?].hide: 특정 타겟을 사용자 인터페이스에서 숨길지 결정한다. 이 값이 true로 설정되면 해당 타겟은 뷰어에 표시되지 않는다. [JSON] (Boolean, Default=false)
 - targets[?].ignore: 특정 타겟을 전체 처리 로직에서 완전히 무시한다. [JSON] (Boolean, Default=false)
-- targets[?].groundTruth: 타겟이 기준 데이터(groundTruth)인지 여부를 설정한다. 설정한 타겟의 이미지 목록이 전체의 기준으로 설정된다. `type=results`를 사용시 필수적으로
+- targets[?].groundTruth: 타겟이 기준 데이터(groundTruth)인지의 여부를 설정한다. 설정한 타겟의 이미지 목록이 전체의 기준으로 설정된다. `type=results`를 사용시 필수적으로
   하나의 타겟에 설정해야 하며, PSNR, SSIM 계산 등에 해당 타겟이 기준으로 사용된다. (이 값이 설정되지 않으면 뷰어는 첫번째 타겟의 이미지 목록을 기준으로 사용한다) [JSON] (Boolean,
   Default=false)
 - targets[?].files: 타겟별로 내부 이미지 파일 목록이 다른 경우, 존재하는 내부 이미지 파일 목록을 수동으로 구성할 때 사용한다. (FileName String Array, Default=[files
