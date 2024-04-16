@@ -1,4 +1,6 @@
 # super-resolution-viewer
+![](https://github.com/refracta/super-resolution-viewer/assets/58779799/d8f76bd3-421d-4c49-a473-cf8454696edc)
+![](https://github.com/refracta/super-resolution-viewer/assets/58779799/b0f9c381-2ad9-4953-a7a8-8beee69c9295)
 
 Image comparison viewers specialized in super-resolution and various vision-related tasks.
 
@@ -34,22 +36,23 @@ docker run --name super-resolution-viewer -p 8080:80 -v $(pwd):/usr/share/nginx/
 
  ```json
 {
-  "title": "tests",
+  "title": "demos",
   "targets": [
     {
       "groundTruth": true,
-      "path": "tests/{data}/a"
+      "path": "demos/{data}/a"
     },
     {
-      "path": "tests/{data}/b"
+      "path": "demos/{data}/b"
     },
     {
-      "path": "tests/{data}/c"
+      "path": "demos/{data}/c"
     },
     {
-      "path": "tests/{data}/d"
+      "path": "demos/{data}/d"
     }
-  ]
+  ],
+  "configHelp": "Available {data} = alpha, beta"
 }
  ```
 

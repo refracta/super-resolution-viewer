@@ -1,5 +1,5 @@
 {
-  "title": "tests",
+  "title": "demos",
   "targets": [
     {
       "groundTruth": true,
