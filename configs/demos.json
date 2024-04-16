@@ -1,0 +1,18 @@
+{
+  "title": "tests",
+  "targets": [
+    {
+      "path": "tests/{data}/a"
+    },
+    {
+      "path": "tests/{data}/b"
+    },
+    {
+      "path": "tests/{data}/c"
+    },
+    {
+      "path": "tests/{data}/d"
+    }
+  ],
+  "configHelp": "Available {data} = alpha, beta"
+}

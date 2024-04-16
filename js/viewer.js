@@ -30,12 +30,21 @@ export default class Viewer {
 
     async init() {
         this.params = Object.fromEntries(new URL(document.location).searchParams);
-        this.configRaw = await fetch(`configs/${this.params.config}`, {cache: "no-store"}).then(response => response.text());
-        const config = JSON.parse(this.configRaw);
-        for (const key in config) {
-            this[key] = this[key] ? this[key] : config[key];
+        try {
+            this.configRaw = await fetch(`configs/${this.params.config}`, {cache: "no-store"}).then(response => response.text());
+            const config = JSON.parse(this.configRaw);
+            for (const key in config) {
+                this[key] = this[key] ? this[key] : config[key];
+            }
+        } catch (e) {
+            if (!this.baseTarget) {
+                const h1 = document.createElement('h1');
+                h1.textContent = `[ERROR] config file could not be found, or config file is not valid.`;
+                h1.style.color = 'red';
+                document.body.appendChild(h1);
+            }
         }
-        this.type = this.params.type || this.type;
+        this.type = this.params.type || this.type || 'default';
         this.mappers = mappers[this.type];
 
         const filteredParamKeys = Object.keys(this.params);
