@@ -2,16 +2,16 @@
   "title": "tests",
   "targets": [
     {
-      "path": "tests/{data}/a"
+      "path": "demos/{data}/a"
     },
     {
-      "path": "tests/{data}/b"
+      "path": "demos/{data}/b"
     },
     {
-      "path": "tests/{data}/c"
+      "path": "demos/{data}/c"
     },
     {
-      "path": "tests/{data}/d"
+      "path": "demos/{data}/d"
     }
   ],
   "configHelp": "Available {data} = alpha, beta"
