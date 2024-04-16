@@ -78,7 +78,7 @@ export default class Viewer {
             target.labelTextContent = target.labelTextContent.padEnd(maxLabelLength, ' ');
         }
 
-        this.baseTarget = this.targets.find(t => t.groundtruth) || this.targets[0];
+        this.baseTarget = this.targets.find(t => t.groundTruth) || this.targets[0];
         if (!this.baseTarget) {
             const h1 = document.createElement('h1');
             h1.textContent = `[ERROR] Failed to load baseTarget`;
@@ -95,7 +95,7 @@ export default class Viewer {
         this.baseTarget.files.sort(naturalSort);
         this.targets = this.targets.map((t, i, a) => this.mappers['targetAfter'](t, i, a, this));
 
-        this.title = this.params.title || this.title || 'SR Viewer';
+        this.title = this.params.title || this.title || 'Super-Resolution Viewer';
         this.indexes = this.params?.indexes?.split(/[.,*]/gi) || this.indexes || Array.from(this.baseTarget.files.keys());
         this.maxFileNameLength = this.indexes.map(i => this.baseTarget.files[i].length).reduce((maxLength, length) => Math.max(maxLength, length));
 
@@ -373,7 +373,7 @@ export default class Viewer {
             }
         }
 
-        if (this.baseTarget.groundtruth) {
+        if (this.baseTarget.groundTruth) {
             const baseImage = this.getImage(this.baseTarget, file);
             targets.forEach(async target => {
                 if (target !== this.baseTarget) {
@@ -447,7 +447,7 @@ export default class Viewer {
                 await waitImage(diffBaseImage);
                 currentImage = getDiffImage(diffBaseImage, currentImage);
             }
-            if (this.baseTarget.groundtruth && !c.target.groundtruth && this.showingPSNRVisualizer) {
+            if (this.baseTarget.groundTruth && !c.target.groundTruth && this.showingPSNRVisualizer) {
                 await waitFor(_ => rawImage.psnr && rawImage.psnrs && rawImage.psnrs.length > 0);
                 currentImage = getPSNRImage({
                     totalPSNR: rawImage.psnr,

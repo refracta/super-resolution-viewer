@@ -2,6 +2,7 @@
   "title": "tests",
   "targets": [
     {
+      "groundTruth": true,
       "path": "demos/{data}/a"
     },
     {

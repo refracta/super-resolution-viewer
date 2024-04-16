@@ -15,7 +15,7 @@ export default {
             file = target.suffix ? `${fileName}${target.suffix}.${fileExt}` : file;
             return `/${target.path}/${file}`;
         }, targetBefore: (target, index, array, viewer) => {
-            if (target.groundtruth) {
+            if (target.groundTruth) {
                 for (let { search, replacement } of [{ search: 'Manga109', replacement: 'manga109' }, {
                     search: 'Urban100', replacement: 'urban100'
                 }, { search: 'datasets/DIV2K100/GTmod12', replacement: 'datasets/DIV2K/DIV2K_valid_HR' }]) {
@@ -24,7 +24,7 @@ export default {
             }
             return target;
         }, targetAfter: (target, index, array, viewer) => {
-            if (!target.groundtruth) {
+            if (!target.groundTruth) {
                 const gtTarget = viewer.baseTarget;
                 const gtFile = gtTarget.files[0];
                 const dotIndex = gtFile.lastIndexOf('.');
