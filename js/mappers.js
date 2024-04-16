@@ -3,10 +3,6 @@ export default {
         file: (target, file, viewer) => `/${target.path}/${file}`,
         targetBefore: (target, index, array, viewer) => target,
         targetAfter: (target, index, array, viewer) => target
-    }, "basicsr-features": {
-        file: (target, file, viewer) => `/${target.path}/${file}`,
-        targetBefore: (target, index, array, viewer) => target,
-        targetAfter: (target, index, array, viewer) => target
     }, "basicsr-results": {
         file: (target, file, viewer) => {
             const dotIndex = file.lastIndexOf('.');
@@ -16,9 +12,9 @@ export default {
             return `/${target.path}/${file}`;
         }, targetBefore: (target, index, array, viewer) => {
             if (target.groundTruth) {
-                for (let { search, replacement } of [{ search: 'Manga109', replacement: 'manga109' }, {
+                for (let {search, replacement} of [{search: 'Manga109', replacement: 'manga109'}, {
                     search: 'Urban100', replacement: 'urban100'
-                }, { search: 'datasets/DIV2K100/GTmod12', replacement: 'datasets/DIV2K/DIV2K_valid_HR' }]) {
+                }, {search: 'datasets/DIV2K100/GTmod12', replacement: 'datasets/DIV2K/DIV2K_valid_HR'}]) {
                     target.path = target.path.replace(search, replacement);
                 }
             }
