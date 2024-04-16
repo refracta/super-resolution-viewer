@@ -185,7 +185,6 @@ export default {
         // 주어진 매개변수로부터 수정한 target 객체를 반환한다.
     }, ...
 }
-...
 ```
 
 ## Shortcut
