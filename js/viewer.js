@@ -72,7 +72,9 @@ export default class Viewer {
         const maxLabelLength = this.targets.reduce((length, target) => Math.max(length, target.label.length), -1);
         for (const target of this.targets) {
             target.labelBackgroundColor = target.labelBackgroundColor || stringToColor(target.label);
+            target.labelBackgroundColor = /^([0-9A-F]{3}){1,2}$/i.test(target.labelBackgroundColor) ? `#${target.labelBackgroundColor}` : target.labelBackgroundColor;
             target.labelColor = target.labelColor || getContrastYIQ(target.labelBackgroundColor);
+            target.labelColor = /^([0-9A-F]{3}){1,2}$/i.test(target.labelColor) ? `#${target.labelColor}` : target.labelColor;
             const paddingNeeded = maxLabelLength - target.label.length;
             const padLeft = Math.floor(paddingNeeded / 2);
             target.labelTextContent = target.label.padStart(padLeft + target.label.length, ' ');
