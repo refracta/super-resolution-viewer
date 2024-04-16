@@ -1,13 +1,13 @@
 import ImageContainer from "./image-container.js"
 import mappers from "./mappers.js"
-import {naturalSort, stringToColor, getContrastYIQ, beep, downloadURI, waitFor} from "./utils.js";
+import {beep, downloadURI, getContrastYIQ, naturalSort, stringToColor, waitFor} from "./utils.js";
 import {calculatePSNR, calculateSSIM, getDiffImage, getPSNRImage, waitImage, waitImages} from "./image-utils.js";
 
 export default class Viewer {
 
     getDirectoryInfo(target) {
         if (this.isGitHubHosting) {
-            return this.tree.filter(e => e.path.includes(target.path) && e.path.replace(`${target.path}/`).split('/').length === 1 && e.type === 'blob').map(e => e.path.split('/').pop());
+            return this.tree.filter(e => e.path.includes(target.originalPath) && e.path.replace(`${target.originalPath}/`).split('/').length === 1 && e.type === 'blob').map(e => e.path.split('/').pop());
         }
         return fetch(`/${target.path}`, {cache: "no-store"})
             .then(response => response.ok ? response.text() : '[]')
@@ -48,14 +48,15 @@ export default class Viewer {
 
         this.isGitHubHosting = location.host.endsWith('github.io');
         if (this.isGitHubHosting) {
-            const user = location.host.split('.').shift();
-            const repo = location.pathname.split('/').filter(p => p).shift();
-            const {branch} = await fetch(`js/github.io.json`).then(r => r.json());
-            this.tree = (await fetch(`https://api.github.com/repos/${user}/${repo}/git/trees/${branch}?recursive=true`).then(r => r.json())).tree;
+            this.user = location.host.split('.').shift();
+            this.repo = location.pathname.split('/').filter(p => p).shift();
+            this.branch = (await fetch(`js/github.io.json`).then(r => r.json())).branch;
+            this.tree = (await fetch(`https://api.github.com/repos/${this.user}/${this.repo}/git/trees/${this.branch}?recursive=true`).then(r => r.json())).tree;
+            this.targets = this.targets.map(t => ({...t, originalPath: t.path, path: `${this.repo}/${t.path}`}));
         }
         const targetResponses = await Promise.all(this.targets.map(t => this.getDirectoryInfo(t)));
         this.targets = this.targets.map((t, i) => ({
-            ...t, label: t.label || t.path, files: t.files || targetResponses[i]
+            ...t, label: t.label || t.originalPath || t.path, files: t.files || targetResponses[i]
         }));
         this.targets = this.targets.filter(t => !t.ignore && t.files.length);
         const maxLabelLength = this.targets.reduce((length, target) => Math.max(length, target.label.length), -1);
