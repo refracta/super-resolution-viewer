@@ -151,7 +151,7 @@ docker run --name super-resolution-viewer -p 8080:80 -v $(pwd):/usr/share/nginx/
 }
 ```
 
-- configHelp: 설정 관련 도움말을 제공하는 텍스트이다. 뷰어 로딩에 실패하거나, 'F2' 키를 눌렀을 때 보여진다. [GET, JSON] (String, Default=null)
+- configHelp: 설정 관련 도움말을 제공하는 텍스트이다. 뷰어 로딩에 실패하거나, 'F2' 또는 'w' 키를 눌렀을 때 보여진다. [GET, JSON] (String, Default=null)
 - targets[?].path: 각 타겟에 대한 데이터 파일이나 리소스의 서버 경로를 지정한다. 이 경로는 뷰어가 필요한 리소스를 로드할 때 사용된다. `{paramName}` 형태의 문자열을 포함하는
   경우, `GET 매개변수`에 `paramName` 매개변수가 존재하는 경우 해당 값으로 교체되어 설정된다. 중괄호를 사용하여야 할 경우 `"\\{data\\}"`의 형태로 이스케이핑할 수 있다. [JSON] (
   String, Required)
