@@ -30,8 +30,17 @@ export default class Viewer {
 
     async init() {
         this.params = Object.fromEntries(new URL(document.location).searchParams);
+        this.isGitHubHosting = location.host.endsWith('github.io');
+
         try {
-            this.configPath = this.params.configPath ? this.params.configPath : `configs/${this.params.config}`;
+            if (this.params.configPath) {
+                this.configPath = this.params.configPath;
+                if (this.isGitHubHosting && this.configPath.startsWith('/')) {
+                    this.configPath = `/${this.repo}${this.configPath}`;
+                }
+            } else {
+                this.configPath = `configs/${this.params.config}`;
+            }
             this.configRaw = await fetch(this.configPath, {cache: "no-store"}).then(response => response.text());
             const config = JSON.parse(this.configRaw);
             for (const key in config) {
@@ -56,7 +65,6 @@ export default class Viewer {
         }
         this.targets = this.targets.map((t, i, a) => this.mappers['targetBefore'](t, i, a, this));
 
-        this.isGitHubHosting = location.host.endsWith('github.io');
         if (this.isGitHubHosting) {
             this.user = location.host.split('.').shift();
             this.repo = location.pathname.split('/').filter(p => p).shift();
