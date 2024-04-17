@@ -197,7 +197,6 @@ export default class ImageContainer extends HTMLDivElement {
         this.canvas.addEventListener('wheel', ifZoomMode(e => {
             if (e.deltaY < 0) {
                 const limitSize = Math.min(image.naturalWidth, image.naturalHeight);
-                console.log(viewer.zoomWidthOnly);
                 if (viewer.zoomWidthOnly) {
                     viewer.zoomAreaWidth = Math.min(image.naturalWidth, viewer.zoomAreaWidth + viewer.zoomAreaDelta);
                 } else if (viewer.zoomHeightOnly) {
@@ -219,6 +218,22 @@ export default class ImageContainer extends HTMLDivElement {
             e.preventDefault();
             handleZoomMode(e);
         }));
+
+        const createMouseEmulator = (type, initDict = {}) => (e) => {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent(type, {
+                clientX: touch.clientX,
+                clientY: touch.clientY,
+                ...initDict
+            });
+            this.canvas.dispatchEvent(mouseEvent);
+        }
+
+        this.canvas.addEventListener('touchstart', createMouseEmulator('mousedown', {button: 0}));
+        this.canvas.addEventListener('touchmove', createMouseEmulator('mousemove'));
+        this.canvas.addEventListener('touchend', createMouseEmulator('mousemove'));
+        this.canvas.addEventListener('touchcancel', createMouseEmulator('mouseup'));
 
         this.appendChild(this.canvas);
 
