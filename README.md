@@ -151,7 +151,7 @@ docker run --name super-resolution-viewer -p 8080:80 -v $(pwd):/usr/share/nginx/
 }
 ```
 
-- configHelp: 설정 관련 도움말을 제공하는 텍스트이다. 뷰어 로딩에 실패하거나, 'F2' 키를 눌렀을 때 보여진다. [GET, JSON] (String, Default=null)
+- configHelp: 설정 관련 도움말을 제공하는 텍스트이다. 뷰어 로딩에 실패하거나, 'F2' 또는 'w' 키를 눌렀을 때 보여진다. [GET, JSON] (String, Default=null)
 - targets[?].path: 각 타겟에 대한 데이터 파일이나 리소스의 서버 경로를 지정한다. 이 경로는 뷰어가 필요한 리소스를 로드할 때 사용된다. `{paramName}` 형태의 문자열을 포함하는
   경우, `GET 매개변수`에 `paramName` 매개변수가 존재하는 경우 해당 값으로 교체되어 설정된다. 중괄호를 사용하여야 할 경우 `"\\{data\\}"`의 형태로 이스케이핑할 수 있다. [JSON] (
   String, Required)
@@ -177,18 +177,18 @@ docker run --name super-resolution-viewer -p 8080:80 -v $(pwd):/usr/share/nginx/
 
 ```js
 export default {
-    "mapping-type-name": {
-        // type 설정과 동일한 이름으로 설정
-        file: (target, file, viewer) => `/${target.path}/${file}`,
-        // target, file (기준 파일 목록의 파일), viewer (모든 설정 속성을 프로퍼티로 가지고 있는 객체)
-        // 주어진 매개변수로부터 최종 이미지 경로를 반환하게 작성한다.
-        targetBefore: (target, index, array, viewer) => target,
-        // target.files를 가져오기 위해, target.path에 HTTP GET 요청을 전송하기 직전에 호출된다.
-        // 주어진 매개변수로부터 수정한 target 객체를 반환한다.
-        targetAfter: (target, index, array, viewer) => target
-        // target.files가 설정되고, target 관련 설정이 최종적으로 완료된 후에 호출된다.
-        // 주어진 매개변수로부터 수정한 target 객체를 반환한다.
-    }, ...
+  "mapping-type-name": {
+    // type 설정과 동일한 이름으로 설정
+    file: (target, file, viewer) => `/${target.path}/${file}`,
+    // target, file (기준 파일 목록의 파일), viewer (모든 설정 속성을 프로퍼티로 가지고 있는 객체)
+    // 주어진 매개변수로부터 최종 이미지 경로를 반환하게 작성한다.
+    targetBefore: (target, index, array, viewer) => target,
+    // target.files를 가져오기 위해, target.path에 HTTP GET 요청을 전송하기 직전에 호출된다.
+    // 주어진 매개변수로부터 수정한 target 객체를 반환한다.
+    targetAfter: (target, index, array, viewer) => target
+    // target.files가 설정되고, target 관련 설정이 최종적으로 완료된 후에 호출된다.
+    // 주어진 매개변수로부터 수정한 target 객체를 반환한다.
+  }, ...
 }
 ```
 
