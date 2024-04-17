@@ -1,4 +1,4 @@
-name: gh-pages-syncer
+name: sync-gh-pages
 
 on:
   push:
