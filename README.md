@@ -195,11 +195,12 @@ export default {
 ## Shortcut
 
 ```
-F1: help
-F2: config help
-←, →: previous, next image
+F1, q: help
+F2, w: config help
+← , →: previous, next image
+n , m: previous, next image
 (i)ndex: move to index
-(r)eset
+(response)eset
 shift + wheel: page zoom
 
 (a)dd to favorites
