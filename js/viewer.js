@@ -31,6 +31,8 @@ export default class Viewer {
     async init() {
         this.params = Object.fromEntries(new URL(document.location).searchParams);
         this.isGitHubHosting = location.host.endsWith('github.io');
+        this.user = location.host.split('.').shift();
+        this.repo = location.pathname.split('/').filter(p => p).shift();
 
         try {
             if (this.params.configPath) {
@@ -66,8 +68,6 @@ export default class Viewer {
         this.targets = this.targets.map((t, i, a) => this.mappers['targetBefore'](t, i, a, this));
 
         if (this.isGitHubHosting) {
-            this.user = location.host.split('.').shift();
-            this.repo = location.pathname.split('/').filter(p => p).shift();
             this.branch = (await fetch(`js/github.io.json`).then(r => r.json())).branch;
             this.tree = (await fetch(`https://api.github.com/repos/${this.user}/${this.repo}/git/trees/${this.branch}?recursive=true`).then(r => r.json())).tree;
             this.targets = this.targets.map(t => ({...t, originalPath: t.path, path: `${this.repo}/${t.path}`}));
