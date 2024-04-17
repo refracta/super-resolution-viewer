@@ -1,6 +1,6 @@
 import ImageContainer from "./image-container.js"
 import mappers from "./mappers.js"
-import {beep, downloadURI, getContrastYIQ, naturalSort, stringToColor, waitFor} from "./utils.js";
+import {beep, downloadURI, getContrastYIQ, isMobile, naturalSort, stringToColor, waitFor} from "./utils.js";
 import {calculatePSNR, calculateSSIM, getDiffImage, getPSNRImage, waitImage, waitImages} from "./image-utils.js";
 
 export default class Viewer {
@@ -163,6 +163,8 @@ export default class Viewer {
         this.zoomMouseDown = false;
         this.zoomWidthOnly = false;
         this.zoomHeightOnly = false;
+
+        this.mobile = this.params.mobile === 'true' || this.mobile || false;
 
         this.crop = this.params.crop || this.crop || null;
         this.crop = this.crop ? this.parseCropString(this.crop) : null;
@@ -474,16 +476,52 @@ export default class Viewer {
         }));
     }
 
+    addMobileKeyboardHandler() {
+        if (isMobile() || this.mobile) {
+            this.mobileInput = document.createElement('input');
+            this.mobileInput.type = 'text';
+            this.mobileInput.style.position = 'fixed';
+            this.mobileInput.style.zIndex = '0';
+            this.mobileInput.style.width = '100vw';
+            this.mobileInput.style.left = '0';
+            this.mobileInput.style.bottom = '50vh';
+            this.mobileInput.style.fontSize = '5rem';
+            this.mobileInput.style.height = '0';
+            this.mobileInput.style.opacity = '0';
+
+            const redirectKeyEvent = (keyChar, eventType) => {
+                const simulatedEvent = new KeyboardEvent(eventType, {
+                    key: keyChar, bubbles: true, cancelable: true
+                });
+                document.dispatchEvent(simulatedEvent);
+            }
+
+            this.mobileInput.addEventListener('beforeinput', (e) => {
+                if (e.data) {
+                    redirectKeyEvent(e.data, "keydown");
+                    redirectKeyEvent(e.data, "keypress");
+                    redirectKeyEvent(e.data, "keyup");
+                }
+                e.target.value = "";
+            });
+
+            document.body.appendChild(this.mobileInput);
+            document.body.addEventListener('click', () => {
+                this.mobileInput.focus();
+            });
+        }
+    }
+
     addKeyboardHandler() {
         document.addEventListener('keydown', e => {
             if (e.ctrlKey) {
                 return;
             }
-            if (e.key === "ArrowRight" || e.key === "Right") {
+            if (e.key === "ArrowRight" || e.key === "Right" || e.key === "m") {
                 if (this.setIndex(this.index + 1)) {
                     this.update();
                 }
-            } else if (e.key === "ArrowLeft" || e.key === "Left") {
+            } else if (e.key === "ArrowLeft" || e.key === "Left" || e.key === "n") {
                 if (this.setIndex(this.index - 1)) {
                     this.update();
                 }
@@ -519,11 +557,12 @@ export default class Viewer {
                     this.setIndex(this.getSafeIndex(parseInt(newIndex)));
                     this.update(0);
                 }
-            } else if (e.key === 'F1') {
+            } else if (e.key === 'F1' || e.key === 'q') {
                 alert(`
-                        F1: help
-                        F2: config help
-                        ←, →: previous, next image
+                        F1, q: help
+                        F2, w: config help
+                        ← , →: previous, next image
+                        n , m: previous, next image
                         (i)ndex: move to index
                         (response)eset
                         shift + wheel: page zoom
@@ -545,7 +584,7 @@ export default class Viewer {
                         (u)rl: copy crop url (in zoom mode)
                     `.split('\n').map(l => l.trim()).join('\n').trim());
                 e.preventDefault();
-            } else if (e.key === 'F2') {
+            } else if (e.key === 'F2' || e.key === 'w') {
                 alert(this.configHelp);
             } else if (e.key === ' ') {
                 if (this.zoomMode) {
@@ -584,6 +623,7 @@ export default class Viewer {
     async start() {
         this.addZoomHandler();
         this.addKeyboardHandler();
+        this.addMobileKeyboardHandler();
         this.runTimeBasedUpdater();
         this.update();
         document.title = this.title;
