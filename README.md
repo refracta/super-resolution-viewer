@@ -206,7 +206,7 @@ shift + wheel: page zoom
 (a)dd to favorites
 (l)ist favorites (toggle)
 (d)elete favorites
-f3: delete all favorites
+F3: delete all favorites
 
 (p)snr visualizer (toggle)
 1 ~ 9: show image diff (toggle)
