@@ -200,7 +200,7 @@ F2, w: config help
 ← , →: previous, next image
 n , m: previous, next image
 (i)ndex: move to index
-(response)eset
+(r)eset
 shift + wheel: page zoom
 
 (a)dd to favorites

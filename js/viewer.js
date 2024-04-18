@@ -564,7 +564,7 @@ export default class Viewer {
                         ← , →: previous, next image
                         n , m: previous, next image
                         (i)ndex: move to index
-                        (response)eset
+                        (r)eset
                         shift + wheel: page zoom
 
                         (a)dd to favorites
