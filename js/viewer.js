@@ -164,7 +164,11 @@ export default class Viewer {
         this.zoomWidthOnly = false;
         this.zoomHeightOnly = false;
 
-        this.mobile = this.params.mobile === 'true' || this.mobile || false;
+        if (this.params.mobile === 'true' || this.params.mobile === 'false') {
+            this.mobile = this.params.mobile === 'true';
+        } else {
+            this.mobile = this.mobile || false;
+        }
 
         this.crop = this.params.crop || this.crop || null;
         this.crop = this.crop ? this.parseCropString(this.crop) : null;

@@ -177,18 +177,18 @@ docker run --name super-resolution-viewer -p 8080:80 -v $(pwd):/usr/share/nginx/
 
 ```js
 export default {
-    "mapping-type-name": {
-        // type 설정과 동일한 이름으로 설정
-        file: (target, file, viewer) => `/${target.path}/${file}`,
-        // target, file (기준 파일 목록의 파일), viewer (모든 설정 속성을 프로퍼티로 가지고 있는 객체)
-        // 주어진 매개변수로부터 최종 이미지 경로를 반환하게 작성한다.
-        targetBefore: (target, index, array, viewer) => target,
-        // target.files를 가져오기 위해, target.path에 HTTP GET 요청을 전송하기 직전에 호출된다.
-        // 주어진 매개변수로부터 수정한 target 객체를 반환한다.
-        targetAfter: (target, index, array, viewer) => target
-        // target.files가 설정되고, target 관련 설정이 최종적으로 완료된 후에 호출된다.
-        // 주어진 매개변수로부터 수정한 target 객체를 반환한다.
-    }, ...
+  "mapping-type-name": {
+    // type 설정과 동일한 이름으로 설정
+    file: (target, file, viewer) => `/${target.path}/${file}`,
+    // target, file (기준 파일 목록의 파일), viewer (모든 설정 속성을 프로퍼티로 가지고 있는 객체)
+    // 주어진 매개변수로부터 최종 이미지 경로를 반환하게 작성한다.
+    targetBefore: (target, index, array, viewer) => target,
+    // target.files를 가져오기 위해, target.path에 HTTP GET 요청을 전송하기 직전에 호출된다.
+    // 주어진 매개변수로부터 수정한 target 객체를 반환한다.
+    targetAfter: (target, index, array, viewer) => target
+    // target.files가 설정되고, target 관련 설정이 최종적으로 완료된 후에 호출된다.
+    // 주어진 매개변수로부터 수정한 target 객체를 반환한다.
+  }, ...
 }
 ```
 
@@ -200,7 +200,7 @@ F2, f: config help
 ← , →: previous, next image
 n , m: previous, next image
 (i)ndex: move to index
-(r)eset
+(response)eset
 shift + wheel: page zoom
 
 (a)dd to favorites
