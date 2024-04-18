@@ -196,7 +196,7 @@ export default {
 
 ```
 F1, q: help
-F2, w: config help
+F2, f: config help
 ← , →: previous, next image
 n , m: previous, next image
 (i)ndex: move to index

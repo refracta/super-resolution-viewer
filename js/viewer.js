@@ -560,7 +560,7 @@ export default class Viewer {
             } else if (e.key === 'F1' || e.key === 'q') {
                 alert(`
                         F1, q: help
-                        F2, w: config help
+                        F2, f: config help
                         ← , →: previous, next image
                         n , m: previous, next image
                         (i)ndex: move to index
@@ -584,7 +584,7 @@ export default class Viewer {
                         (u)rl: copy crop url (in zoom mode)
                     `.split('\n').map(l => l.trim()).join('\n').trim());
                 e.preventDefault();
-            } else if (e.key === 'F2' || e.key === 'w') {
+            } else if (e.key === 'F2' || e.key === 'f') {
                 alert(this.configHelp);
             } else if (e.key === ' ') {
                 if (this.zoomMode) {
