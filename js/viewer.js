@@ -151,7 +151,7 @@ export default class Viewer {
         this.diffIndex = parseInt(this.params.diffIndex) || this.diffIndex || -1;
 
         this.zoomMode = this.params.zoomMode === 'true' || this.zoomMode || false;
-        ;this.zoomAreaWidthRatio = parseFloat(this.params.zoomAreaWidthRatio) || this.zoomAreaWidthRatio || 0.8;
+        this.zoomAreaWidthRatio = parseFloat(this.params.zoomAreaWidthRatio) || this.zoomAreaWidthRatio || 0.8;
         this.zoomAreaHeightRatio = parseFloat(this.params.zoomAreaHeightRatio) || this.zoomAreaHeightRatio || 0.8;
         this.zoomAreaWidth = parseInt(this.params.zoomAreaWidth) || this.zoomAreaWidth || 100;
         this.zoomAreaHeight = parseInt(this.params.zoomAreaHeight) || this.zoomAreaHeight || 100;
