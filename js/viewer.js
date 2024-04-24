@@ -344,7 +344,6 @@ export default class Viewer {
     }
 
     updateInfoLabel() {
-
         const file = this.getIndexFile();
         for (const container of this.imageContainers) {
             if (this.zoomMode) {
