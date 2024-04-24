@@ -346,16 +346,16 @@ export default class Viewer {
     updateInfoLabel() {
         const file = this.getIndexFile();
         for (const container of this.imageContainers) {
+            const image = this.getImage(container.target, file);
             if (this.zoomMode) {
                 if (this?.zoomDrawParams?.crop) {
                     const {x, y, w, h} = this?.zoomDrawParams?.crop;
-                    container.infoLabel.textContent = `X: ${x}, Y: ${y}, S: ${w}x${h}`;
+                    container.infoLabel.textContent = `X: ${x}, Y: ${y}, S: ${w}x${h}, I: ${image.naturalWidth}x${image.naturalHeight}`;
                     container.infoLabel.style.display = '';
                 } else {
                     container.infoLabel.style.display = 'none';
                 }
             } else {
-                const image = this.getImage(container.target, file);
                 if (image) {
                     if (image.psnr || image.ssim) {
                         let labelTextContent = [];
