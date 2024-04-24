@@ -217,5 +217,6 @@ wheel: resize zoom area (in zoom mode)
 (w) + wheel: resize zoom area width (in zoom mode)
 (h) + wheel: resize zoom area height (in zoom mode)
 space: download cropped images (in zoom mode)
+shift + space: download cropped images with original images (in zoom mode)
 (u)rl: copy crop url (in zoom mode)
 ```

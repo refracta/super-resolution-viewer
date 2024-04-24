@@ -135,7 +135,7 @@ export default class Viewer {
         this.canvasWheelColor = /^([0-9A-F]{3}){1,2}$/i.test(this.canvasWheelColor) ? `#${this.canvasWheelColor}` : this.canvasWheelColor;
         this.canvasThickness = parseInt(this.params.canvasThickness) || this.canvasThickness || 3;
 
-        this.SSIMWindowSize = parseInt(this.params.SSIMWindowSize) || this.SSIMWindowSize || 8;
+        this.SSIMWindowSize = parseInt(this.params.SSIMWindowSize) || this.SSIMWindowSize || 11;
 
         this.PSNRGridWidth = parseInt(this.params.PSNRGridWidth) || this.PSNRGridWidth || 5;
         this.PSNRGridHeight = parseInt(this.params.PSNRGridHeight) || this.PSNRGridHeight || 5;
@@ -192,7 +192,7 @@ export default class Viewer {
         return `x${x}y${y}w${w}h${h}` + (this.diffIndex > -1 ? `d${this.diffIndex}` : '') + (this.showingPSNRVisualizer ? `p1` : '');
     }
 
-    async downloadCropImages({x, y, w, h}) {
+    async downloadCropImages({x, y, w, h}, includeOriginal = false) {
         await waitFor(_ => this.updateStatus === 'done');
         const file = this.getIndexFile();
         const containers = this.imageContainers.filter(c => !c.target.hide);
@@ -214,8 +214,15 @@ export default class Viewer {
 
         const zip = new JSZip();
         croppedImages.forEach((blob, index) => {
-            zip.file(`[${index}] ${targets[index].label}.png`, blob);
+            zip.file(`[${index}]${includeOriginal ? ' [CROPPED]' : ''} ${targets[index].label.replaceAll('/', '／')}.png`, blob);
         });
+
+        if (includeOriginal) {
+            const originalImages = await Promise.all(images.map(i => fetch(i.src).then(r => r.blob())));
+            originalImages.forEach((image, index) => {
+                zip.file(`[${index}] [ORIGINAL] ${targets[index].label.replaceAll('/', '／')}.png`, image);
+            });
+        }
 
         const content = await zip.generateAsync({type: "blob"});
         const blobURL = URL.createObjectURL(content);
@@ -339,21 +346,31 @@ export default class Viewer {
     updateInfoLabel() {
         const file = this.getIndexFile();
         for (const container of this.imageContainers) {
-            const image = this.getImage(container.target, file);
-            if (image) {
-                if (image.psnr || image.ssim) {
-                    let labelTextContent = [];
-                    if (image.psnr) {
-                        labelTextContent.push(`PSNR: ${image.psnr}`);
-                    }
-                    if (image.ssim) {
-                        labelTextContent.push(`SSIM: ${image.ssim}`);
-                    }
-                    labelTextContent = labelTextContent.join(', ');
-                    container.infoLabel.textContent = labelTextContent;
+            if (this.zoomMode) {
+                if (this?.zoomDrawParams?.crop) {
+                    const {x, y, w, h} = this?.zoomDrawParams?.crop;
+                    container.infoLabel.textContent = `X: ${x}, Y: ${y}, S: ${w}x${h}`;
                     container.infoLabel.style.display = '';
                 } else {
                     container.infoLabel.style.display = 'none';
+                }
+            } else {
+                const image = this.getImage(container.target, file);
+                if (image) {
+                    if (image.psnr || image.ssim) {
+                        let labelTextContent = [];
+                        if (image.psnr) {
+                            labelTextContent.push(`PSNR: ${image.psnr}`);
+                        }
+                        if (image.ssim) {
+                            labelTextContent.push(`SSIM: ${image.ssim}`);
+                        }
+                        labelTextContent = labelTextContent.join(', ');
+                        container.infoLabel.textContent = labelTextContent;
+                        container.infoLabel.style.display = '';
+                    } else {
+                        container.infoLabel.style.display = 'none';
+                    }
                 }
             }
         }
@@ -585,6 +602,7 @@ export default class Viewer {
                         (w) + wheel: resize zoom area width (in zoom mode)
                         (h) + wheel: resize zoom area height (in zoom mode)
                         space: download cropped images (in zoom mode)
+                        shift + space: download cropped images with original images (in zoom mode)
                         (u)rl: copy crop url (in zoom mode)
                     `.split('\n').map(l => l.trim()).join('\n').trim());
                 e.preventDefault();
@@ -592,7 +610,11 @@ export default class Viewer {
                 alert(this.configHelp);
             } else if (e.key === ' ') {
                 if (this.zoomMode) {
-                    this.downloadCropImages(this.zoomDrawParams.crop);
+                    if (e.shiftKey) {
+                        this.downloadCropImages(this.zoomDrawParams.crop, true);
+                    } else {
+                        this.downloadCropImages(this.zoomDrawParams.crop);
+                    }
                     e.preventDefault();
                 }
             } else if (e.key === 'u') {
