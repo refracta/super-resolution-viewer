@@ -81,13 +81,14 @@ export default class Viewer {
                 this.tree = JSON.parse(localStorage.tree);
             }
             this.targets.forEach(target => {
+                target.originalPath = target.path;
                 target.searchPath = target.path.startsWith('/') ? target.path.substring(1) : this.root + target.path;
                 target.path = `/${this.repo}/${target.searchPath}`;
             });
         }
         const targetResponses = await Promise.all(this.targets.map(t => this.getDirectoryInfo(t)));
         this.targets = this.targets.map((t, i) => ({
-            ...t, label: t.label || t.path, files: t.files || targetResponses[i]
+            ...t, label: t.label || t.originalPath || t.path, files: t.files || targetResponses[i]
         }));
         this.targets = this.targets.filter(t => !t.ignore && t.files.length);
         const maxLabelLength = this.targets.reduce((length, target) => Math.max(length, target.label.length), -1);
