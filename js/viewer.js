@@ -4,10 +4,9 @@ import { beep, downloadURI, getContrastYIQ, isMobile, naturalSort, stringToColor
 import { calculatePSNR, calculateSSIM, getDiffImage, getPSNRImage, waitImage, waitImages } from "./image-utils.js";
 
 export default class Viewer {
-
     getDirectoryInfo(target) {
         if (this.isGitHubHosting) {
-            return this.tree.filter(e => e.path.includes(target.path) && e.path.replace(`${target.path}/`).split('/').length === 1 && e.type === 'blob').map(e => e.path.split('/').pop());
+            return this.tree.filter(e => e.path.includes(target.searchPath) && e.path.replace(`${target.searchPath}/`).split('/').length === 1 && e.type === 'blob').map(e => e.path.split('/').pop());
         }
         return fetch(target.path, { cache: "no-store" })
             .then(response => response.ok ? response.text() : '[]')
@@ -33,6 +32,7 @@ export default class Viewer {
         this.isGitHubHosting = location.host.endsWith('github.io');
         this.user = location.host.split('.').shift();
         this.repo = location.pathname.split('/').filter(p => p).shift();
+        this.root = location.pathname.replace(`/${this.repo}/`, '');
 
         try {
             if (this.params.configPath) {
@@ -69,7 +69,21 @@ export default class Viewer {
 
         if (this.isGitHubHosting) {
             this.branch = (await fetch(`js/github.io.json`).then(r => r.json())).branch;
-            this.tree = (await fetch(`https://api.github.com/repos/${this.user}/${this.repo}/git/trees/${this.branch}?recursive=true`).then(r => r.json())).tree;
+            try {
+                const response = await fetch(`https://api.github.com/repos/${this.user}/${this.repo}/git/trees/${this.branch}?recursive=true`).then(r => r.json());
+                this.tree = response.tree;
+                if (!this.tree) {
+                    throw new Error(JSON.stringify(response));
+                }
+                localStorage.tree = JSON.stringify(this.tree);
+            } catch (e) {
+                console.error(e);
+                this.tree = JSON.parse(localStorage.tree);
+            }
+            this.targets.forEach(target => {
+                target.searchPath = target.path.startsWith('/') ? target.path.substring(1) : this.root + target.path;
+                target.path = `/${this.repo}/${target.searchPath}`;
+            });
         }
         const targetResponses = await Promise.all(this.targets.map(t => this.getDirectoryInfo(t)));
         this.targets = this.targets.map((t, i) => ({
