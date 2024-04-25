@@ -9,7 +9,7 @@ export default class Viewer {
         if (this.isGitHubHosting) {
             return this.tree.filter(e => e.path.includes(target.originalPath) && e.path.replace(`${target.originalPath}/`).split('/').length === 1 && e.type === 'blob').map(e => e.path.split('/').pop());
         }
-        return fetch(`/${target.path}`, {cache: "no-store"})
+        return fetch(target.path, {cache: "no-store"})
             .then(response => response.ok ? response.text() : '[]')
             .then(response => {
                 try {
