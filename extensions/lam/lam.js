@@ -112,9 +112,9 @@ export default class LAM {
                         const location = JSON.parse(JSON.stringify(this.zoomDrawParams.crop));
 
                         for (let i = 0; i < containers.length; i++) {
-                            containers[i].lam = { label: `(Waiting)` };
+                            containers[i].lam = { label: `(waiting)` };
                         }
-                        gtContainer.lam = { label: `(Calcaulating)` };
+                        gtContainer.lam = { label: `(calculating)` };
                         const body = JSON.stringify({ type: 'get_position_image', file: filePath, ...location });
                         const positionImage = await fetch(entrypoint, {
                             method: 'POST', headers: { 'Content-Type': 'application/json' }, body,
@@ -130,14 +130,14 @@ export default class LAM {
 
                         for (let i = 0; i < containers.length; i++) {
                             try {
-                                containers[i].lam = { label: `(Calcaulating)` };
+                                containers[i].lam = { label: `(calculating)` };
                                 const { target } = containers[i];
                                 const path = target.model || target.path.split('/visualization').shift();
                                 const body = JSON.stringify({ type: 'lam', path, file: filePath, ...location });
                                 const response = await fetch(entrypoint, {
                                     method: 'POST', headers: { 'Content-Type': 'application/json' }, body,
                                 });
-                                containers[i].lam = { label: `(Loading)` };
+                                containers[i].lam = { label: `(loading)` };
                                 if (response.status === 200) {
                                     const zip = await JSZip.loadAsync(await response.blob());
                                     const images = await Promise.all(zipImages.map(name => zip.file(name).async('blob').then(blobToImage)));
@@ -152,11 +152,11 @@ export default class LAM {
                                 } else {
                                     const { error } = await response.json();
                                     console.error(error);
-                                    containers[i].lam = { error, label: `(Error)` };
+                                    containers[i].lam = { error, label: `(error)` };
                                     containers[i].infoLabel.style.backgroundColor = 'red';
                                 }
                             } catch (e) {
-                                containers[i].lam = { label: `(Error)` };
+                                containers[i].lam = { label: `(error)` };
                                 console.error(e);
                             }
                         }
