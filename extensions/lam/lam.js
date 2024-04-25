@@ -157,6 +157,7 @@ export default class LAM {
                                 }
                             } catch (e) {
                                 containers[i].lam = { label: ` (error)` };
+                                containers[i].infoLabel.style.backgroundColor = 'red';
                                 console.error(e);
                             }
                         }
