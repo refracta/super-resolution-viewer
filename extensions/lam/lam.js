@@ -35,7 +35,7 @@ export default class LAM {
             this._updateInfoLabel();
             for (const container of this.imageContainers) {
                 if (this.lamMode && container?.lam?.label) {
-                    container.infoLabel.textContent += ' ' + container?.lam?.label;
+                    container.infoLabel.textContent += container?.lam?.label;
                 }
             }
         }
@@ -112,15 +112,15 @@ export default class LAM {
                         const location = JSON.parse(JSON.stringify(this.zoomDrawParams.crop));
 
                         for (let i = 0; i < containers.length; i++) {
-                            containers[i].lam = { label: `(waiting)` };
+                            containers[i].lam = { label: ` (waiting)` };
                         }
-                        gtContainer.lam = { label: `(calculating)` };
+                        gtContainer.lam = { label: ` (calculating)` };
                         const body = JSON.stringify({ type: 'get_position_image', file: filePath, ...location });
                         const positionImage = await fetch(entrypoint, {
                             method: 'POST', headers: { 'Content-Type': 'application/json' }, body,
                         }).then(r => r.blob()).then(blobToImage);
                         positionImage.rawImage = this.getImage(gtContainer.target, file);
-                        gtContainer.lam = { image: positionImage, label: `[GT]` };
+                        gtContainer.lam = { image: positionImage, label: ` [GT]` };
                         await waitImage(positionImage);
                         await gtContainer.setImage(positionImage, this);
                         if (this.zoomMode) {
@@ -130,19 +130,19 @@ export default class LAM {
 
                         for (let i = 0; i < containers.length; i++) {
                             try {
-                                containers[i].lam = { label: `(calculating)` };
+                                containers[i].lam = { label: ` (calculating)` };
                                 const { target } = containers[i];
                                 const path = target.model || target.path.split('/visualization').shift();
                                 const body = JSON.stringify({ type: 'lam', path, file: filePath, ...location });
                                 const response = await fetch(entrypoint, {
                                     method: 'POST', headers: { 'Content-Type': 'application/json' }, body,
                                 });
-                                containers[i].lam = { label: `(loading)` };
+                                containers[i].lam = { label: ` (loading)` };
                                 if (response.status === 200) {
                                     const zip = await JSZip.loadAsync(await response.blob());
                                     const images = await Promise.all(zipImages.map(name => zip.file(name).async('blob').then(blobToImage)));
                                     const { diffusionIndex } = await zip.file('data.json').async('string').then(data => JSON.parse(data));
-                                    containers[i].lam = { images, diffusionIndex, label: `DI: ${diffusionIndex}` };
+                                    containers[i].lam = { images, diffusionIndex, label: `, DI: ${diffusionIndex}` };
                                     await waitImage(images[index]);
                                     await containers[i].setImage(images[index], this);
                                     images[index].rawImage = this.getImage(containers[i].target, file);
@@ -152,11 +152,11 @@ export default class LAM {
                                 } else {
                                     const { error } = await response.json();
                                     console.error(error);
-                                    containers[i].lam = { error, label: `(error)` };
+                                    containers[i].lam = { error, label: ` (error)` };
                                     containers[i].infoLabel.style.backgroundColor = 'red';
                                 }
                             } catch (e) {
-                                containers[i].lam = { label: `(error)` };
+                                containers[i].lam = { label: ` (error)` };
                                 console.error(e);
                             }
                         }
@@ -164,7 +164,5 @@ export default class LAM {
                 }
             });
         };
-        ImageContainer.prototype._setImage = ImageContainer.prototype.setImage;
-
     }
 }
