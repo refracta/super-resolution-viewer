@@ -1,7 +1,7 @@
 import ImageContainer from "./image-container.js"
 import mappers from "./mappers.js"
-import {beep, downloadURI, getContrastYIQ, isMobile, naturalSort, stringToColor, waitFor} from "./utils.js";
-import {calculatePSNR, calculateSSIM, getDiffImage, getPSNRImage, waitImage, waitImages} from "./image-utils.js";
+import { beep, downloadURI, getContrastYIQ, isMobile, naturalSort, stringToColor, waitFor } from "./utils.js";
+import { calculatePSNR, calculateSSIM, getDiffImage, getPSNRImage, waitImage, waitImages } from "./image-utils.js";
 
 export default class Viewer {
 
@@ -9,7 +9,7 @@ export default class Viewer {
         if (this.isGitHubHosting) {
             return this.tree.filter(e => e.path.includes(target.path) && e.path.replace(`${target.path}/`).split('/').length === 1 && e.type === 'blob').map(e => e.path.split('/').pop());
         }
-        return fetch(target.path, {cache: "no-store"})
+        return fetch(target.path, { cache: "no-store" })
             .then(response => response.ok ? response.text() : '[]')
             .then(response => {
                 try {
@@ -280,11 +280,14 @@ export default class Viewer {
         this.showingFavorites = !this.showingFavorites;
     }
 
-    addToFavorites() {
+    saveFavorite() {
         const favorites = this.getFavorites();
         if (!favorites.includes(location.href)) {
             favorites.push(location.href);
             this.setFavorites(favorites);
+        }
+        if (this.showingFavorites) {
+            this.showFavorites();
         }
         beep();
     }
@@ -303,7 +306,7 @@ export default class Viewer {
         return retrieveURL;
     }
 
-    removeFromFavorites() {
+    deleteFavorite() {
         this.setFavorites(this.getFavorites().filter(url => url !== location.href));
         if (this.showingFavorites) {
             this.showFavorites();
@@ -312,7 +315,7 @@ export default class Viewer {
         setTimeout(beep, 100);
     }
 
-    clearAllFavorites() {
+    clearFavorites() {
         this.setFavorites([]);
         if (this.showingFavorites) {
             this.showFavorites();
@@ -346,10 +349,11 @@ export default class Viewer {
         const file = this.getIndexFile();
         for (const container of this.imageContainers) {
             const image = this.getImage(container.target, file);
-            if (this.zoomMode) {
+            if (container.image && this.zoomMode) {
                 if (this?.zoomDrawParams?.crop) {
-                    const {x, y, w, h} = this?.zoomDrawParams?.crop;
-                    container.infoLabel.textContent = `X: ${x}, Y: ${y}, S: ${w}x${h}, I: ${image.naturalWidth}x${image.naturalHeight}`;
+                    const { naturalWidth, naturalHeight } = container.image;
+                    const { x, y, w, h } = this?.zoomDrawParams?.crop;
+                    container.infoLabel.textContent = `X: ${x}, Y: ${y}, S: ${w}x${h}, I: ${naturalWidth}x${naturalHeight}`;
                     container.infoLabel.style.display = '';
                 } else {
                     container.infoLabel.style.display = 'none';
@@ -465,7 +469,7 @@ export default class Viewer {
                 document.body.style.zoom = newZoomLevel;
                 localStorage['zoomLevel'] = newZoomLevel;
             }
-        }, {passive: false});
+        }, { passive: false });
     }
 
     async applyImageEffects() {
@@ -548,18 +552,18 @@ export default class Viewer {
             } else if (e.key === 'response') {
                 this.update(0);
             } else if (e.key === 's') {
-                this.addToFavorites();
+                this.saveFavorite();
             } else if (e.key === 'l') {
                 this.toggleFavorites();
             } else if (e.key === 'd') {
-                this.removeFromFavorites();
+                this.deleteFavorite();
             } else if (e.key === 'c') {
                 (async () => {
                     downloadURI(await domtoimage.toPng(document.body), `[${this.title}] ${this.getIndexFile()}`);
                 })();
             } else if (e.key === 'F3') {
                 e.preventDefault();
-                this.clearAllFavorites();
+                this.clearFavorites();
             } else if ('1' <= e.key && e.key <= '9') {
                 const pressedIndex = parseInt(e.key) - 1;
                 this.diffIndex = this.diffIndex !== pressedIndex ? pressedIndex : -1;
@@ -587,7 +591,7 @@ export default class Viewer {
                         (r)eset
                         shift + wheel: page zoom
 
-                        (a)dd to favorites
+                        (s)dd to favorites
                         (l)ist favorites (toggle)
                         (d)elete favorites
                         f3: delete all favorites

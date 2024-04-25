@@ -121,7 +121,7 @@ export default class ImageContainer extends HTMLDivElement {
             ctx.globalAlpha = 1;
         }
 
-        const handleZoomMode = (e) => {
+        this.canvas.updateZoomInterfaceData = (e) => {
             const zoomLevel = parseFloat(document.body.style.zoom) || 1;
             let mouseX = e.offsetX / zoomLevel;
             let mouseY = e.offsetY / zoomLevel;
@@ -170,9 +170,13 @@ export default class ImageContainer extends HTMLDivElement {
                     y: parseInt(sy * renderHeightRatio),
                     w: Math.round(canvasZoomAreaWidth * renderWidthRatio),
                     h: Math.round(canvasZoomAreaHeight * renderHeightRatio)
-                }
+                },
+                event: e
             };
+        }
 
+        const handleZoomMode = (e) => {
+            this.canvas.updateZoomInterfaceData(e);
             for (const container of viewer.imageContainers) {
                 if (!container.target.hide) {
                     container.canvas.drawZoomInterface(viewer.zoomDrawParams);
@@ -223,9 +227,7 @@ export default class ImageContainer extends HTMLDivElement {
             e.preventDefault();
             const touch = e.touches[0];
             const mouseEvent = new MouseEvent(type, {
-                clientX: touch.clientX,
-                clientY: touch.clientY,
-                ...initDict
+                clientX: touch.clientX, clientY: touch.clientY, ...initDict
             });
             this.canvas.dispatchEvent(mouseEvent);
         }
