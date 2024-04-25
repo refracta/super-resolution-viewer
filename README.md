@@ -179,7 +179,7 @@ docker run --name super-resolution-viewer -p 8080:80 -v $(pwd):/usr/share/nginx/
 export default {
   "mapping-type-name": {
     // type 설정과 동일한 이름으로 설정
-    file: (target, file, viewer) => `/${target.path}/${file}`,
+    file: (target, file, viewer) => `${target.path}/${file}`,
     // target, file (기준 파일 목록의 파일), viewer (모든 설정 속성을 프로퍼티로 가지고 있는 객체)
     // 주어진 매개변수로부터 최종 이미지 경로를 반환하게 작성한다.
     targetBefore: (target, index, array, viewer) => target,
