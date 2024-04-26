@@ -119,7 +119,7 @@ docker run --name super-resolution-viewer -p 8080:80 -v $(pwd):/usr/share/nginx/
 
 - canvasRightColor: 그리기 도구에서 사용할 오른쪽 버튼의 색상을 설정한다. [GET, JSON] (CSS Color String)
 - canvasThickness: 그리기 도구의 선 두께를 설정한다. [GET, JSON] (Integer, Unit:px, Default=3)
-- SSIMWindowSize: SSIM 계산 시 사용할 윈도우 크기를 설정한다. [GET, JSON] (Integer, Unit:px, Default=8)
+- SSIMWindowSize: SSIM 계산 시 사용할 윈도우 크기를 설정한다. [GET, JSON] (Integer, Unit:px, Default=11)
 - PSNRGridWidth: PSNR 시각화 그리드의 너비를 설정한다. [GET, JSON] (Integer, Unit:px, Default=5)
 - PSNRGridHeight: PSNR 시각화 그리드의 높이를 설정한다. [GET, JSON] (Integer, Unit:px, Default=5)
 - PSNRGridSize: PSNR 그리드의 크기를 설정한다. 이 값이 설정되면, 너비와 높이가 이 크기로 설정된다. [GET, JSON] (Integer, Unit:px, Default=null)
