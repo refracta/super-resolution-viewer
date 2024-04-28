@@ -1,6 +1,15 @@
 import ImageContainer from "./image-container.js"
 import mappers from "./mappers.js"
-import {beep, downloadURI, getContrastYIQ, isMobile, naturalSort, stringToColor, waitFor} from "./utils.js";
+import {
+    beep,
+    downloadURI,
+    getContrastYIQ,
+    getOrdinalSuffix,
+    isMobile,
+    naturalSort,
+    stringToColor,
+    waitFor
+} from "./utils.js";
 import {calculatePSNR, calculateSSIM, getDiffImage, getPSNRImage, waitImage, waitImages} from "./image-utils.js";
 
 export default class Viewer {
@@ -380,10 +389,10 @@ export default class Viewer {
                     if (image.psnr || image.ssim) {
                         let labelTextContent = [];
                         if (image.psnr) {
-                            labelTextContent.push(`PSNR: ${image.psnr}`);
+                            labelTextContent.push(`PSNR: ${Math.round(image.psnr * 1e5) / 1e5} (${getOrdinalSuffix(image.psnrRanking)})`);
                         }
                         if (image.ssim) {
-                            labelTextContent.push(`SSIM: ${image.ssim}`);
+                            labelTextContent.push(`SSIM: ${Math.round(image.ssim * 1e5) / 1e5} (${getOrdinalSuffix(image.ssimRanking)})`);
                         }
                         labelTextContent = labelTextContent.join(', ');
                         container.infoLabel.textContent = labelTextContent;
@@ -436,10 +445,16 @@ export default class Viewer {
                     if (!rawImage.psnr) {
                         rawImage.psnr = 'calculating';
                         rawImage.psnr = calculatePSNR(baseImage, rawImage)[0][0];
+                        const images = targets.map(t => this.getImage(t, file)).filter(i => i.psnr);
+                        images.sort((a, b) => b.psnr - a.psnr);
+                        images.forEach((image, index) => image.psnrRanking = index + 1);
                     }
                     if (!rawImage.ssim) {
                         rawImage.ssim = 'calculating';
                         rawImage.ssim = calculateSSIM(baseImage, rawImage, this.SSIMWindowSize);
+                        const images = targets.map(t => this.getImage(t, file)).filter(i => i.ssim);
+                        images.sort((a, b) => b.ssim - a.ssim);
+                        images.forEach((image, index) => image.ssimRanking = index + 1);
                     }
                     if (!rawImage.psnrs) {
                         rawImage.psnrs = [];
