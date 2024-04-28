@@ -1,14 +1,14 @@
 import ImageContainer from "./image-container.js"
 import mappers from "./mappers.js"
-import { beep, downloadURI, getContrastYIQ, isMobile, naturalSort, stringToColor, waitFor } from "./utils.js";
-import { calculatePSNR, calculateSSIM, getDiffImage, getPSNRImage, waitImage, waitImages } from "./image-utils.js";
+import {beep, downloadURI, getContrastYIQ, isMobile, naturalSort, stringToColor, waitFor} from "./utils.js";
+import {calculatePSNR, calculateSSIM, getDiffImage, getPSNRImage, waitImage, waitImages} from "./image-utils.js";
 
 export default class Viewer {
     getDirectoryInfo(target) {
         if (this.isGitHubHosting) {
             return this.tree.filter(e => e.path.includes(target.searchPath) && e.path.replace(`${target.searchPath}/`).split('/').length === 1 && e.type === 'blob').map(e => e.path.split('/').pop());
         }
-        return fetch(target.path, { cache: "no-store" })
+        return fetch(target.path, {cache: "no-store"})
             .then(response => response.ok ? response.text() : '[]')
             .then(response => {
                 try {
@@ -366,9 +366,12 @@ export default class Viewer {
             const image = this.getImage(container.target, file);
             if (container.image && this.zoomMode) {
                 if (this?.zoomDrawParams?.crop) {
-                    const { naturalWidth, naturalHeight } = container.image;
-                    const { x, y, w, h } = this?.zoomDrawParams?.crop;
-                    container.infoLabel.textContent = `X: ${x}, Y: ${y}, S: ${w}x${h}, I: ${naturalWidth}x${naturalHeight}`;
+                    const {naturalWidth, naturalHeight} = container.image;
+                    const {x, y, w, h} = this?.zoomDrawParams?.crop;
+                    const {zoomAreaRect, zoomImageRect} = this?.zoomDrawParams;
+                    let zoomRate = zoomImageRect?.[2] / zoomAreaRect?.[2];
+                    zoomRate = Math.round(zoomRate * 100) / 100;
+                    container.infoLabel.textContent = `X: ${x}, Y:${y}, Z:${zoomRate}x, S: ${w}x${h}, I: ${naturalWidth}x${naturalHeight}`;
                     container.infoLabel.style.display = '';
                 } else {
                     container.infoLabel.style.display = 'none';
@@ -484,7 +487,7 @@ export default class Viewer {
                 document.body.style.zoom = newZoomLevel;
                 localStorage['zoomLevel'] = newZoomLevel;
             }
-        }, { passive: false });
+        }, {passive: false});
     }
 
     async applyImageEffects() {
