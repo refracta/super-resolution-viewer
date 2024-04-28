@@ -171,7 +171,8 @@ export default class ImageContainer extends HTMLDivElement {
                     w: Math.round(canvasZoomAreaWidth * renderWidthRatio),
                     h: Math.round(canvasZoomAreaHeight * renderHeightRatio)
                 },
-                event: e
+                event: e,
+                zoomRate: targetWidth / (ex - sx)
             };
         }
 

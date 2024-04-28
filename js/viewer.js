@@ -368,8 +368,7 @@ export default class Viewer {
                 if (this?.zoomDrawParams?.crop) {
                     const {naturalWidth, naturalHeight} = container.image;
                     const {x, y, w, h} = this?.zoomDrawParams?.crop;
-                    const {zoomAreaRect, zoomImageRect} = this?.zoomDrawParams;
-                    let zoomRate = zoomImageRect?.[2] / zoomAreaRect?.[2];
+                    let {zoomRate} = this?.zoomDrawParams;
                     zoomRate = Math.round(zoomRate * 100) / 100;
                     container.infoLabel.textContent = `X: ${x}, Y:${y}, Z:${zoomRate}x, S: ${w}x${h}, I: ${naturalWidth}x${naturalHeight}`;
                     container.infoLabel.style.display = '';
