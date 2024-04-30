@@ -41,7 +41,7 @@ body {
     padding: 5px 8px;
     box-sizing: border-box;
     font-family: 'Nanum Gothic Coding', monospace;
-    white-space: pre;
+    white-space: normal;
     opacity: 0.7;
     color: white;
     bottom: 0;
